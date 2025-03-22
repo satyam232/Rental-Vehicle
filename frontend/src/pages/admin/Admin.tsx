@@ -15,6 +15,8 @@ import { authService } from '@/services/auth';
 import { vehicleService } from '@/services/vehicle';
 import { bookingService } from '@/services/booking';
 import { AddVehicleForm } from './AddVehicleForm';
+import { toast } from '@/components/ui/use-toast';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 export default function Admin() {
   const [currentTab, setCurrentTab] = useState('users');
@@ -114,7 +116,7 @@ if (!isAdmin) {
                           <TableCell>{user.role}</TableCell>
                           <TableCell>
                             <Button variant="ghost" size="sm" className="mr-2">Edit</Button>
-                            <Button variant="destructive" size="sm">Delete</Button>
+                           
                           </TableCell>
                         </TableRow>
                       ))}
@@ -214,14 +216,46 @@ if (!isAdmin) {
                     </TableHeader>
                     <TableBody>
                       {vehicles.map((vehicle) => (
-                        <TableRow key={vehicle._id}>
-                          <TableCell className="px-4 py-3 font-medium">{vehicle._id}</TableCell>
+                        <TableRow key={vehicle.id}>
+                          <TableCell className="px-4 py-3 font-medium">{vehicle.id}</TableCell>
                           <TableCell className="px-4 py-3">{vehicle?.name || 'N/A'}</TableCell>
                           <TableCell className="px-4 py-3">{vehicle?.type || 'N/A'}</TableCell>
                           <TableCell className="px-4 py-3 text-right">₹{vehicle.price?.toFixed(2)}</TableCell>
                           <TableCell className="px-4 py-3 text-right">
                             <Button variant="ghost" size="sm" className="mr-2">Edit</Button>
-                            <Button variant="destructive" size="sm">Delete</Button>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="destructive" size="sm">Delete</Button>
+                              </DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>Confirm Deletion</DialogTitle>
+                                  <DialogDescription>
+                                    Are you sure you want to delete this vehicle? This action cannot be undone.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter>
+                                  <Button variant="outline" onClick={() => {}}>Cancel</Button>
+                                  <Button variant="destructive" onClick={async () => {
+                                    try {
+                                      await vehicleService.deleteVehicle(vehicle.id);
+                                      setVehicles(prev => prev.filter(v => v.id !== vehicle.id));
+                                      toast({
+                                        title: "Success",
+                                        description: "Vehicle deleted successfully",
+                                      });
+                                    } catch (error) {
+                                      console.error('Failed to delete vehicle:', error);
+                                      toast({
+                                        title: "Error",
+                                        description: "Failed to delete vehicle",
+                                        variant: "destructive"
+                                      });
+                                    }
+                                  }}>Delete</Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
                           </TableCell>
                         </TableRow>
                       ))}

@@ -39,6 +39,14 @@ export const vehicleService = {
     }
   },
 
+  async deleteVehicle(id: string): Promise<void> {
+    const token = authService.getToken();
+    if (!token) throw new Error('Authentication required');
+    await apiClient.delete(`/vehicles/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  },
+
   async getVehicleById(id: string): Promise<VehicleData> {
     if (!id) {
     //   console.error('Attempted to fetch vehicle with undefined ID');
