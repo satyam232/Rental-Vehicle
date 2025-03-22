@@ -12,6 +12,7 @@ import Booking from "./pages/Booking";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/admin/Admin";
 import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/dashboard/*" element={<Dashboard />} />
             <Route path="/payment/:bookingId" element={<Payment />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

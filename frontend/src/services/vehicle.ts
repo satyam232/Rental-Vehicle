@@ -1,9 +1,11 @@
-import apiClient from '@/lib/api-client';
+import  apiClient  from '@/lib/api-client';
+import { authService } from '@/services/auth';
 
 export interface VehicleData {
   id: string;
   name: string;
   type: string;
+  description?: string;
   price: number;
   image: string;
   seats: number;
@@ -21,6 +23,20 @@ export const vehicleService = {
       const { _id, ...rest } = vehicle;
       return { id: _id, ...rest };
     });
+  },
+
+  async createVehicle(vehicleData: Omit<VehicleData, 'id'>): Promise<VehicleData> {
+    try {
+      const token = authService.getToken();
+      if (!token) throw new Error('Authentication required');
+      const response = await apiClient.post('/vehicles', vehicleData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const { _id, ...rest } = response.data;
+      return { id: _id, ...rest };
+    } catch (error) {
+      throw new Error('Failed to create vehicle');
+    }
   },
 
   async getVehicleById(id: string): Promise<VehicleData> {

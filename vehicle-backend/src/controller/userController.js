@@ -1,4 +1,4 @@
-    import User from '../models/user.js';
+import User from '../models/user.js';
 
 // Register a new user
 export const register = async (req, res) => {
@@ -10,6 +10,7 @@ export const register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
+
 
     // Create new user
     const user = new User({
@@ -34,9 +35,23 @@ export const register = async (req, res) => {
           email: user.email,
           isAdmin: user.isAdmin
         }
+
+// Get all users (admin only)
+
       });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+
+// Get all users (admin only)
+
+};
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, '-password -__v');
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users' });
   }
 };
 
@@ -51,11 +66,16 @@ export const signin = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+// Get all users (admin only)
+
+
     // Check password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
+
+// Get all users (admin only)
 
     // Generate token
     const token = user.generateAuthToken();
@@ -70,10 +90,16 @@ export const signin = async (req, res) => {
           email: user.email,
           isAdmin: user.isAdmin
         }
+
+// Get all users (admin only)
+
       });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
+
+// Get all users (admin only)
+
 };
 
 export const getProfile = async (req, res) => {
@@ -83,7 +109,12 @@ export const getProfile = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+
+// Get all users (admin only)
+
 };
+
+
 
 export const logoutUser = (req, res) => {
   res.status(200).json({

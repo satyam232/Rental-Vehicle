@@ -1,5 +1,5 @@
 import express from 'express';
-import { createBooking, getBooking, getUserBookings, cancelBooking, updateBookingStatus, confirmBooking } from '../controller/bookingController.js';
+import { createBooking, getBooking, getUserBookings, cancelBooking, updateBookingStatus, confirmBooking, getAllBookings } from '../controller/bookingController.js';
 import auth from '../middleware/auth.js';
 import adminAuth from '../middleware/adminAuth.js';
 
@@ -22,5 +22,8 @@ router.patch('/:id/confirm', auth, confirmBooking);
 
 // Update booking status (admin only)
 router.patch('/:id/status', auth, adminAuth, updateBookingStatus);
+
+// Get all bookings (admin only)
+router.get('/admin/all-bookings', auth, adminAuth, getAllBookings);
 
 export default router;

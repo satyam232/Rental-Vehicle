@@ -9,12 +9,22 @@ export interface RegisterData extends LoginCredentials {
   name: string;
 }
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AuthResponse {
   token: string;
   user: {
     _id: string;
     name: string;
     email: string;
+    isAdmin: boolean;
   };
 }
 
@@ -62,5 +72,17 @@ export const authService = {
     return response.data.user;
   },
 
-  
+  async isAdmin(): Promise<boolean> {
+    const user = await this.getCurrentUser();
+    return user.isAdmin;
+  },
+
+  async getAdminUsers(): Promise<User[]> {
+    const token = this.getToken();
+    if (!token) throw new Error('Authentication required');
+    const response = await apiClient.get<User[]>('/admin/users', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  }
 };

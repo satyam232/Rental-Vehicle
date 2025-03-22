@@ -43,7 +43,7 @@ export function MainNav() {
     { name: "Contact", path: "/#contact" },
     ...(isAuthenticated ? [
       { name: "Dashboard", path: "/dashboard" },
-      { name: "Settings", path: "/settings" }
+      // { name: "Settings", path: "/settings" }
     ] : []),
   ];
 

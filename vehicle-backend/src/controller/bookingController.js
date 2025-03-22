@@ -80,6 +80,19 @@ export const updateBookingStatus = async (req, res) => {
   }
 };
 
+export const getAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate('vehicleId')
+      .populate('userId')
+      .sort({ createdAt: -1 });
+    
+    res.json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 export const confirmBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);

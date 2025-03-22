@@ -68,5 +68,14 @@ export const bookingService = {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
+  },
+
+  async getAllBookings(): Promise<BookingResponse[]> {
+    const token = authService.getToken();
+    if (!token) throw new Error('Authentication required');
+    const response = await apiClient.get<BookingResponse[]>('bookings/admin/all-bookings?populate=vehicleId,userId', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
   }
 };
